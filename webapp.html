@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hangman Game</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f1f5f2;
+      color: #222;
+      text-align: center;
+      padding: 30px;
+    }
+
+    h1 {
+      color: #204c30;
+      margin-bottom: 10px;
+    }
+
+    #menu, #chances, #message, #score {
+      margin-top: 15px;
+    }
+
+    #word {
+      font-size: 2rem;
+      letter-spacing: 12px;
+      margin: 20px auto;
+    }
+
+    #keyboard {
+      max-width: 600px;
+      margin: 20px auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .key {
+      background-color: #356c45;
+      color: white;
+      border: none;
+      margin: 5px;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.3s;
+    }
+
+    .key:hover {
+      background-color: #2c5839;
+    }
+
+    .key.disabled {
+      background-color: #bbb;
+      cursor: not-allowed;
+    }
+
+    button, select {
+      padding: 10px 15px;
+      font-size: 1rem;
+      margin: 5px;
+      background-color: #204c30;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #163624;
+    }
+
+    #replay {
+      display: none;
+    }
+
+    #score {
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Hangman</h1>
+
+  <div id="menu">
+    <label for="lengthSelect">Choose word length:</label>
+    <select id="lengthSelect">
+      <option value="3">3 letters</option>
+      <option value="4">4 letters</option>
+      <option value="5" selected>5 letters</option>
+      <option value="6">6 letters</option>
+    </select>
+    <button id="startBtn">Start Game</button>
+  </div>
+
+  <div id="word"></div>
+  <div id="chances"></div>
+  <div id="keyboard"></div>
+  <div id="message"></div>
+  <div id="score">Wins: 0 | Losses: 0</div>
+  <button id="replay">Play Again</button>
+
+  <script>
+    const words = [
+      'bonsai', 'leaf', 'moss', 'trunk', 'style', 'green', 'tree', 'twig', 'root', 'bark', 'plant', 'pot', 'prune'
+    ];
+
+    let word = '';
+    let guessedLetters = [];
+    let wrongGuesses = 0;
+    const maxGuesses = 6;
+    let wins = 0;
+    let losses = 0;
+
+    const wordDisplay = document.getElementById('word');
+    const keyboard = document.getElementById('keyboard');
+    const messageDisplay = document.getElementById('message');
+    const chancesDisplay = document.getElementById('chances');
+    const replayBtn = document.getElementById('replay');
+    const scoreDisplay = document.getElementById('score');
+    const startBtn = document.getElementById('startBtn');
+    const lengthSelect = document.getElementById('lengthSelect');
+    const menu = document.getElementById('menu');
+
+    function initializeGame() {
+      const selectedLength = parseInt(lengthSelect.value);
+      const filteredWords = words.filter(w => w.length === selectedLength);
+
+      if (filteredWords.length === 0) {
+        alert('No words with that length.');
+        return;
+      }
+
+      word = filteredWords[Math.floor(Math.random() * filteredWords.length)];
+      guessedLetters = [];
+      wrongGuesses = 0;
+      messageDisplay.textContent = '';
+      replayBtn.style.display = 'none';
+      menu.style.display = 'none';
+
+      updateWord();
+      updateChances();
+      renderKeyboard();
+    }
+
+    function updateWord() {
+      wordDisplay.textContent = word
+        .split('')
+        .map(letter => guessedLetters.includes(letter) ? letter : '_')
+        .join(' ');
+    }
+
+    function updateChances() {
+      chancesDisplay.textContent = `Chances left: ${maxGuesses - wrongGuesses}`;
+    }
+
+    function renderKeyboard() {
+      keyboard.innerHTML = '';
+      const letters = 'abcdefghijklmnopqrstuvwxyz'.split('');
+      letters.forEach(letter => {
+        const btn = document.createElement('button');
+        btn.textContent = letter;
+        btn.classList.add('key');
+        btn.disabled = guessedLetters.includes(letter);
+        if (guessedLetters.includes(letter)) btn.classList.add('disabled');
+        btn.addEventListener('click', () => handleGuess(letter, btn));
+        keyboard.appendChild(btn);
+      });
+    }
+
+    function handleGuess(letter, button) {
+      guessedLetters.push(letter);
+      button.disabled = true;
+      button.classList.add('disabled');
+
+      if (word.includes(letter)) {
+        updateWord();
+        checkWin();
+      } else {
+        wrongGuesses++;
+        updateChances();
+        checkLose();
+      }
+    }
+
+    function checkWin() {
+      if (word.split('').every(letter => guessedLetters.includes(letter))) {
+        messageDisplay.textContent = '🎉 You won!';
+        wins++;
+        endGame();
+      }
+    }
+
+    function checkLose() {
+      if (wrongGuesses >= maxGuesses) {
+        messageDisplay.textContent = `💀 You lost. The word was "${word}"`;
+        losses++;
+        endGame();
+      }
+    }
+
+    function endGame() {
+      document.querySelectorAll('.key').forEach(btn => {
+        btn.disabled = true;
+        btn.classList.add('disabled');
+      });
+      scoreDisplay.textContent = `Wins: ${wins} | Losses: ${losses}`;
+      replayBtn.style.display = 'inline-block';
+    }
+
+    startBtn.addEventListener('click', initializeGame);
+
+    replayBtn.addEventListener('click', () => {
+      menu.style.display = 'block';
+      replayBtn.style.display = 'none';
+      wordDisplay.textContent = '';
+      chancesDisplay.textContent = '';
+      messageDisplay.textContent = '';
+      keyboard.innerHTML = '';
+    });
+  </script>
+</body>
+</html>
