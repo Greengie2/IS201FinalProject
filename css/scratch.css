@@ -1,0 +1,110 @@
+.pretext{
+    background-color:rgb(96, 87, 87);
+    color:rgb(240, 245, 242);
+    padding: 10px;
+}
+
+.maintitle{
+    background-color: rgb(13, 78, 13);
+    color: rgb(0, 15, 15);
+    padding: 1px 10px;
+}
+
+.mainbody{
+    background-color:#a8d5ba;
+    padding: 10px
+}
+
+.fancy{
+    font-family: 'Dancing Script', cursive;
+    font-size: 40px;
+}
+
+.nav-bar {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+  }
+
+.center{
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+ul{
+    list-style-position: inside;
+    padding-left: 0;
+    text-align: center;
+}
+ol{
+    list-style-position: inside;
+    padding-left: 0;
+    text-align: center;
+}
+
+.Main{
+    font-size: large;
+    font-weight: bold;
+    font-family:Georgia, 'Times New Roman', Times, serif
+}
+
+.sub{
+font-weight: lighter;
+font-size: 15px;
+font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #8B5E3C;
+    text-align: center;
+    padding: 10px 0;
+    z-index: 1000;
+  }
+  
+  /* Style the Back to the Top link */
+  .back-to-top {
+    color: #333333;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 10px 20px;
+    background-color: #FF8C00;
+    border-radius: 5px;
+  }
+  
+  .back-to-top:hover {
+    background-color: #FF8C00;
+  }
+
+  img {
+    width: 100%;
+    height: auto;
+    display: block; /* Removes any inline spacing below the image */
+    margin: 0; /* Removes default margin */
+    padding: 0; /* Removes any padding */
+}
+
+.Mainish{
+    font-size: 30px;
+}
+
+.nav-bar a {
+    text-decoration: none;
+    color: #f4f4f4; /* light text */
+    background-color: #2d472d; /* dark green to match your theme */
+    padding: 8px 16px;
+    margin: 0 10px;
+    border-radius: 8px;
+    font-family: 'Verdana', sans-serif;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+  
+  .nav-bar a:hover {
+    background-color: #3e5e3e;
+    transform: scale(1.05);
+  }
